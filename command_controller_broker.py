@@ -2,27 +2,25 @@ import socket
 import sys
 
 def main():
-
-    if len(sys.argv)<3:
-        print("use: python3 command_controler_broker.py -c <command>")
+    if len(sys.argv) < 3:
+        print("Use: python3 broker_com.py -c <command>")
         return
     
     command = sys.argv[2]
 
     host = "127.0.0.1"
-    port = 5000
+    port = 50004
 
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((host, port))
 
-    command_message = f"COMMAND {command}"
-    client.send(command_message.encode())
-
-    confirmation = client.recv(1024).decode()
-
-    if confirmation == "CONFIRMATION_COMMANDS_SUCCESSFUL":
-        data = client.recv(1024).decode()
+    if command == "LIST":
+        client.send(f"LIST".encode())
+        data = client.recv(4096).decode()
+        print("List of topics and subscribers:")
         print(data)
+    else:
+        print("Unknown command")
 
 if __name__ == "__main__":
     main()

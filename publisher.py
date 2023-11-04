@@ -11,12 +11,13 @@ def main():
     message = sys.argv[4]
 
     host = "127.0.0.1"
-    port = 5000
+    port = 50004
 
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((host, port))
 
     command = f"PUBLISH {topic} {message}"
+    print(command)
 
     client.send(command.encode())
 
