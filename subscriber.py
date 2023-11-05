@@ -27,7 +27,6 @@ def main():
     if confirmation == "SUBSCRIBE_ACCEPTED":
         print(f"in topics: {', '.join(topics)}")
 
-    
     while True:
         message = client.recv(1024).decode()
 

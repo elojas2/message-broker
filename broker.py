@@ -5,11 +5,9 @@ topics = {}
 subs = {}
 
 def get_remote_address(client):
-    return client.getpeername()[0]
-    #raddr = client.getpeername()
-    #return f"{raddr[0]}:{raddr[1]}"  # Combina o endereço IP e a porta remota
-  # Obtenha apenas o endereço IP remoto
-
+    ip = f'{client.getpeername()[0]}:{client.getpeername()[1]}'
+    return ip
+    
 def controller_client(client):
     while True:
         try:
@@ -45,6 +43,7 @@ def process_command_data(data, client):
     elif command == "LIST":
         #topic_list = "\n".join([f"Topic: {topic}, Subscribers: {', '.join(map(str, subs[topic]))}" for topic in subs])
         topic_list = "\n".join([f"Topic: {topic}, Subscribers: {', '.join(map(get_remote_address, subs[topic]))}" for topic in subs])
+        #client.send("")
         client.send(topic_list.encode())
 
     else:
