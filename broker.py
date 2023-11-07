@@ -73,7 +73,7 @@ def main():
 
     while True:
         client, address = server.accept()
-        client_thread = threading.Thread(target=handle_client, args=(client, address))
+        client_thread = threading.Thread(target=client_server, args=(client, address))
         client_thread.start()
 
 #chama o main
