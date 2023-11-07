@@ -58,7 +58,7 @@ def process_command_data(data, client):
         client.send("Command invalid".encode())
 
 
-def handle_client(client, address):
+def client_server(client, address):
     print(f"Accepted connection from {address}")
     controller_client(client)
     print(f"Closed connection from {address}")
