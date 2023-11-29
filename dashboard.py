@@ -1,4 +1,6 @@
+#dashboard assina os topicos (alterar depois)
 import tkinter as tk
+from tkinter import *
 from tkinter import ttk
 import socket
 import threading
@@ -51,6 +53,8 @@ class SensorDashboard(tk.Tk):
         elif topic == "CO2":
             self.co2_label.config(text=f"CO2 Level: {value} ppm")
 
-if __name__ == "__main__":
+def main():
     dashboard = SensorDashboard()
     dashboard.mainloop()
+
+main()
