@@ -26,9 +26,9 @@ def humidity_sensor(simulation_interval):
         confirmation = client.recv(1024).decode()
 
         if confirmation == "PUBLISH_ACCEPTED":
-            print(f"Message published: {message} \n in Topic: {topic}")
+            print(f"Message published: {message} \nin Topic: {topic}")
         else:
-            print(f"message rejected: {message} \n in topic: {topic}")
+            print(f"message rejected: {message} \nin topic: {topic}")
     
 if __name__ == "__main__":
     if len(sys.argv) < 2:
