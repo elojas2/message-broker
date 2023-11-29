@@ -16,19 +16,22 @@ def humidity_sensor(simulation_interval):
 
     #loop para envio de acordo com o tempo definido
     while True:
-        message = random.randint(0, 100)
-        command = f"PUBLISH {topic} {message}"
-        client.send(command.encode())
+        try:
+            message = random.randint(0, 100)
+            command = f"PUBLISH {topic} {message}"
+            client.send(command.encode())
 
-        # Aguarde o próximo intervalo de simulação
-        time.sleep(simulation_interval)
+            # Aguarde o próximo intervalo de simulação
+            time.sleep(simulation_interval)
 
-        confirmation = client.recv(1024).decode()
+            confirmation = client.recv(1024).decode()
 
-        if confirmation == "PUBLISH_ACCEPTED":
-            print(f"Message published: {message} \nin Topic: {topic}")
-        else:
-            print(f"message rejected: {message} \nin topic: {topic}")
+            if confirmation == "PUBLISH_ACCEPTED":
+                print(f"Message published: {message} \nin Topic: {topic}")
+            else:
+                print(f"message rejected: {message} \nin topic: {topic}")
+        except Exception as e:
+            print(f"Error in humidity_sensor: {e}")
     
 if __name__ == "__main__":
     if len(sys.argv) < 2:

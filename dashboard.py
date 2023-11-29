@@ -1,65 +1,66 @@
-#dashboard assina os topicos (alterar depois)
-
 import streamlit as st
+from stqdm import stqdm
 import socket
+import json
 import threading
+import time
 
-st.title("aaaaa")
+class SensorDashboard:
+    def __init__(self):
+        self.temperature_value = st.empty()
+        self.humidity_value = st.empty()
+        self.co2_value = st.empty()
 
+    def update_sensor_values(self, data):
+        self.temperature_value.text(f"Temperature: {data['TEMPERATURE']} °C")
+        self.humidity_value.text(f"Humidity: {data['HUMIDITY']}%")
+        self.co2_value.text(f"CO2 Level: {data['CO2']} ppm")
 
+def receive_data(client, dashboard):
+    while True:
+        try:
+            data = client.recv(1024).decode()
+            if not data:
+                break
+            data_dict = json.loads(data)
+            dashboard.update_sensor_values(data_dict)
+        except Exception as e:
+            print(f"Error receiving data: {e}")
+            break
 
+if __name__ == "__main__":
+    st.set_page_config(page_title="Sensor Dashboard", page_icon="🌡️")
+    st.title("Sensor Dashboard")
 
+    dashboard = SensorDashboard()
 
-# class SensorDashboard(tk.Tk):
-#     def __init__(self):
-#         super().__init__()
-#         self.title("Sensor Dashboard")
+    # Conectar ao broker
+    host = "127.0.0.1"
+    port = 50055
 
-#         # Labels para exibir os valores dos sensores
-#         self.temperature_label = ttk.Label(self, text="Temperature: ")
-#         self.temperature_label.grid(row=0, column=0, padx=10, pady=10)
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port))
 
-#         self.humidity_label = ttk.Label(self, text="Humidity: ")
-#         self.humidity_label.grid(row=1, column=0, padx=10, pady=10)
+    # Inscrever-se nos tópicos desejados
+    command = "SUBSCRIBE TEMPERATURE HUMIDITY CO2"
+    client.send(command.encode())
 
-#         self.co2_label = ttk.Label(self, text="CO2 Level: ")
-#         self.co2_label.grid(row=2, column=0, padx=10, pady=10)
+    confirmation = client.recv(1024).decode()
+    if confirmation == "SUBSCRIBE_ACCEPTED":
+        print("Dashboard subscribed to topics.")
 
-#         # Iniciar a conexão com o Broker e assinar os tópicos
-#         threading.Thread(target=self.connect_to_broker).start()
+    # Iniciar thread para receber dados do broker em tempo real
+    receive_thread = threading.Thread(target=receive_data, args=(client, dashboard))
+    receive_thread.start()
 
-#     def connect_to_broker(self):
-#         host = "127.0.0.1"
-#         port = 50055
+    # Aguardar alguns segundos para permitir que o aplicativo Streamlit inicialize
+    time.sleep(5)
 
-#         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#         client.connect((host, port))
+    # Use o stqdm para forçar atualizações em tempo real
+    stqdm(None)
 
-#         # Subscreva aos tópicos relevantes para o dashboard
-#         command = "SUBSCRIBE TEMPERATURE HUMIDITY CO2"
-#         client.send(command.encode())
+    # Aguarde a conclusão do aplicativo Streamlit
+    receive_thread.join()
 
-#         confirmation = client.recv(1024).decode()
-#         if confirmation == "SUBSCRIBE_ACCEPTED":
-#             print("Dashboard subscribed to topics.")
-
-#         while True:
-#             message = client.recv(1024).decode()
-
-#             if message.startswith("topic:") and "message:" in message:
-#                 topic, msg = message.split("message:")
-#                 self.update_sensor_value(topic.strip(), msg.strip())
-
-#     def update_sensor_value(self, topic, value):
-#         if topic == "TEMPERATURE":
-#             self.temperature_label.config(text=f"Temperature: {value} °C")
-#         elif topic == "HUMIDITY":
-#             self.humidity_label.config(text=f"Humidity: {value}%")
-#         elif topic == "CO2":
-#             self.co2_label.config(text=f"CO2 Level: {value} ppm")
-
-# def main():
-#     dashboard = SensorDashboard()
-#     dashboard.mainloop()
-
-# main()
+    # Fechar o socket quando o programa terminar
+    client.close()
