@@ -1,9 +1,8 @@
 import streamlit as st
 from stqdm import stqdm
 import socket
-import json
-import threading
 import time
+import threading
 
 class SensorDashboard:
     def __init__(self):
@@ -16,51 +15,48 @@ class SensorDashboard:
         self.humidity_value.text(f"Humidity: {data['HUMIDITY']}%")
         self.co2_value.text(f"CO2 Level: {data['CO2']} ppm")
 
-def receive_data(client, dashboard):
-    while True:
-        try:
-            data = client.recv(1024).decode()
-            if not data:
-                break
-            data_dict = json.loads(data)
-            dashboard.update_sensor_values(data_dict)
-        except Exception as e:
-            print(f"Error receiving data: {e}")
-            break
-
-if __name__ == "__main__":
+def streamlit_app():
     st.set_page_config(page_title="Sensor Dashboard", page_icon="🌡️")
     st.title("Sensor Dashboard")
-
+    
     dashboard = SensorDashboard()
 
-    # Conectar ao broker
+    topics = sys.argv[2:]
+
+    #host e porta
     host = "127.0.0.1"
     port = 50055
 
+    #conexao TCP
     client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     client.connect((host, port))
 
-    # Inscrever-se nos tópicos desejados
-    command = "SUBSCRIBE TEMPERATURE HUMIDITY CO2"
+    command = "SUBSCRIBE " + ' '.join(topics)
     client.send(command.encode())
 
-    confirmation = client.recv(1024).decode()
-    if confirmation == "SUBSCRIBE_ACCEPTED":
-        print("Dashboard subscribed to topics.")
+    while True:
+        # Substitua este bloco com a lógica de leitura de dados do broker
+        simulated_data = {
+            'TEMPERATURE': '25',
+            'HUMIDITY': '60',
+            'CO2': '400'
+        }
 
-    # Iniciar thread para receber dados do broker em tempo real
-    receive_thread = threading.Thread(target=receive_data, args=(client, dashboard))
-    receive_thread.start()
+        dashboard.update_sensor_values(simulated_data)
 
-    # Aguardar alguns segundos para permitir que o aplicativo Streamlit inicialize
+        # Aguarde alguns segundos antes de atualizar novamente
+        time.sleep(1)
+
+if __name__ == "__main__":
+    # Inicie a execução do aplicativo Streamlit em segundo plano usando threading
+    thread = threading.Thread(target=streamlit_app)
+    thread.start()
+
+    # Aguarde alguns segundos para permitir que o aplicativo Streamlit inicialize
     time.sleep(5)
 
     # Use o stqdm para forçar atualizações em tempo real
     stqdm(None)
 
     # Aguarde a conclusão do aplicativo Streamlit
-    receive_thread.join()
-
-    # Fechar o socket quando o programa terminar
-    client.close()
+    thread.join()
