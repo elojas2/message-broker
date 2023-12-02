@@ -6,7 +6,7 @@ import time
 def co2_sensor(simulation_interval):
 
     #host e porta para conexao TCP
-    topic = "HUMIDITY" 
+    topic = "CO2" 
     host = "127.0.0.1"
     port = 50055
 

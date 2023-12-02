@@ -32,7 +32,7 @@ def process_command_data(data, client):
     #comando subscribe
     if command == "SUBSCRIBE":
         #verifica a segunda palavra do read pra frente
-        for topic in read[1:]:
+        for topic in read[0:]:
             #verifica se já esxite
             subs.setdefault(topic, set()).add(client)
         client.send("SUBSCRIBE_ACCEPTED".encode())

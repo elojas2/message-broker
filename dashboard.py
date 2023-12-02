@@ -1,62 +1,59 @@
 import streamlit as st
-from stqdm import stqdm
-import socket
 import time
-import threading
+import random
 
-class SensorDashboard:
-    def __init__(self):
-        self.temperature_value = st.empty()
-        self.humidity_value = st.empty()
-        self.co2_value = st.empty()
+# Função para gerar valores aleatórios de temperatura, umidade e CO2
+def gerar_valores():
+    temperatura = round(random.uniform(20, 30), 2)
+    umidade = round(random.uniform(40, 60), 2)
+    co2 = round(random.uniform(300, 500), 2)
+    return temperatura, umidade, co2
 
-    def update_sensor_values(self, data):
-        self.temperature_value.text(f"Temperature: {data['TEMPERATURE']} °C")
-        self.humidity_value.text(f"Humidity: {data['HUMIDITY']}%")
-        self.co2_value.text(f"CO2 Level: {data['CO2']} ppm")
+# Função principal para executar o aplicativo
+def main():
+    # Configurar a página uma vez no início do script
+    st.set_page_config(page_title='Monitoramento em Tempo Real', page_icon=':chart_with_upwards_trend:')
 
-def streamlit_app():
-    st.set_page_config(page_title="Sensor Dashboard", page_icon="🌡️")
-    st.title("Sensor Dashboard")
+    st.title("Monitoramento em Tempo Real")
     
-    dashboard = SensorDashboard()
+    # Criar placeholders iniciais para os valores
+    
+    
+    
 
-    topics = sys.argv[2:]
+    # Criar gráficos iniciais
+    temperatura_placeholder = st.empty()
+    temperatura_chart = st.line_chart()
+    umidade_placeholder = st.empty()
+    umidade_chart = st.line_chart()
+    co2_placeholder = st.empty()
+    co2_chart = st.line_chart()
 
-    #host e porta
-    host = "127.0.0.1"
-    port = 50055
+    st.text("")  # Adicionar espaço para melhorar a aparência
 
-    #conexao TCP
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    client.connect((host, port))
-
-    command = "SUBSCRIBE " + ' '.join(topics)
-    client.send(command.encode())
+    historico_temperatura = []
+    historico_umidade = []
+    historico_co2 = []
 
     while True:
-        # Substitua este bloco com a lógica de leitura de dados do broker
-        simulated_data = {
-            'TEMPERATURE': '25',
-            'HUMIDITY': '60',
-            'CO2': '400'
-        }
+        temperatura, umidade, co2 = gerar_valores()
 
-        dashboard.update_sensor_values(simulated_data)
+        # Atualizar os placeholders com os novos valores
+        temperatura_placeholder.text(f"Temperatura: {temperatura} °C")
+        umidade_placeholder.text(f"Umidade: {umidade} %")
+        co2_placeholder.text(f"CO2: {co2} ppm")
 
-        # Aguarde alguns segundos antes de atualizar novamente
+        # Adicionar novos pontos aos gráficos
+        historico_temperatura.append(temperatura)
+        historico_umidade.append(umidade)
+        historico_co2.append(co2)
+
+        temperatura_chart.line_chart(historico_temperatura)
+        umidade_chart.line_chart(historico_umidade)
+        co2_chart.line_chart(historico_co2)
+
         time.sleep(1)
 
+# Executar o aplicativo
 if __name__ == "__main__":
-    # Inicie a execução do aplicativo Streamlit em segundo plano usando threading
-    thread = threading.Thread(target=streamlit_app)
-    thread.start()
-
-    # Aguarde alguns segundos para permitir que o aplicativo Streamlit inicialize
-    time.sleep(5)
-
-    # Use o stqdm para forçar atualizações em tempo real
-    stqdm(None)
-
-    # Aguarde a conclusão do aplicativo Streamlit
-    thread.join()
+    main()
