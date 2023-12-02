@@ -1,5 +1,6 @@
 import streamlit as st
 import time
+import socket
 import random
 
 # Função para gerar valores aleatórios de temperatura, umidade e CO2
@@ -16,12 +17,26 @@ def main():
 
     st.title("Monitoramento em Tempo Real")
     
-    # Criar placeholders iniciais para os valores
+    #host e porta
+    host = "127.0.0.1"
+    port = 50055
+
+    #conexao TCP
+    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client.connect((host, port))
+
+    command = "SUBSCRIBE TEMPERATURE HUMIDITY CO2"
+    client.send(command.encode())
     
-    
+    #recebe a confirmacao ou nao do servidor
+    confirmation = client.recv(1024).decode()
+
+    if confirmation == "SUBSCRIBE_ACCEPTED":
+        print("Subscribed topic.")
+        print(f"topics: {', '.join(topics)}")
     
 
-    # Criar gráficos iniciais
+    # Criar placeholders iniciais para os valores e criar gráficos iniciais
     temperatura_placeholder = st.empty()
     temperatura_chart = st.line_chart()
     umidade_placeholder = st.empty()
