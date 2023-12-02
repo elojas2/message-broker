@@ -16,7 +16,7 @@ def co2_sensor(simulation_interval):
 
     #loop para envio de acordo com o tempo definido
     while True:
-        message = random.randint(0, 100)
+        message = round(random.uniform(300, 500), 2)
         command = f"PUBLISH {topic} {message}"
         client.send(command.encode())
 

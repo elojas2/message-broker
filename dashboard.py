@@ -27,13 +27,12 @@ def main():
 
     command = "SUBSCRIBE TEMPERATURE HUMIDITY CO2"
     client.send(command.encode())
-    
+
     #recebe a confirmacao ou nao do servidor
     confirmation = client.recv(1024).decode()
 
     if confirmation == "SUBSCRIBE_ACCEPTED":
         print("Subscribed topic.")
-        print(f"topics: {', '.join(topics)}")
     
 
     # Criar placeholders iniciais para os valores e criar gráficos iniciais
@@ -50,8 +49,24 @@ def main():
     historico_umidade = []
     historico_co2 = []
 
+    temperatura = 0
+    umidade = 0
+    co2 = 0
+
     while True:
-        temperatura, umidade, co2 = gerar_valores()
+        message = client.recv(1024).decode()
+
+        if message.startswith("topic:") and "message:" in message:
+            topic, msg = message.split("message:")
+            print(topic)
+            print(msg)
+        
+        if "TEMPERATURE" in topic:
+            temperatura = msg.strip()
+        elif "HUMIDITY" in topic:
+            umidade = msg.strip()
+        elif "CO2" in topic:
+            co2 = msg.strip()
 
         # Atualizar os placeholders com os novos valores
         temperatura_placeholder.text(f"Temperatura: {temperatura} °C")

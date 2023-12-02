@@ -17,7 +17,7 @@ def humidity_sensor(simulation_interval):
     #loop para envio de acordo com o tempo definido
     while True:
         try:
-            message = random.randint(0, 100)
+            message = round(random.uniform(40, 60), 2)
             command = f"PUBLISH {topic} {message}"
             client.send(command.encode())
 

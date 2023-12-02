@@ -16,7 +16,7 @@ def temperature_sensor(simulation_interval):
 
     #loop para envio de acordo com o tempo definido
     while True:
-        message = random.randint(-10, 40)
+        message = round(random.uniform(20, 30), 2)
         command = f"PUBLISH {topic} {message}"
         client.send(command.encode())
 
