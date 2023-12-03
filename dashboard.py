@@ -1,14 +1,5 @@
 import streamlit as st
-import time
 import socket
-import random
-
-# Função para gerar valores aleatórios de temperatura, umidade e CO2
-def gerar_valores():
-    temperatura = round(random.uniform(20, 30), 2)
-    umidade = round(random.uniform(40, 60), 2)
-    co2 = round(random.uniform(300, 500), 2)
-    return temperatura, umidade, co2
 
 # Função principal para executar o aplicativo
 def main():
@@ -62,11 +53,11 @@ def main():
             print(msg)
         
         if "TEMPERATURE" in topic:
-            temperatura = msg.strip()
+            temperatura = float(msg.strip())
         elif "HUMIDITY" in topic:
-            umidade = msg.strip()
+            umidade = float(msg.strip())
         elif "CO2" in topic:
-            co2 = msg.strip()
+            co2 = float(msg.strip())
 
         # Atualizar os placeholders com os novos valores
         temperatura_placeholder.text(f"Temperatura: {temperatura} °C")
@@ -82,8 +73,4 @@ def main():
         umidade_chart.line_chart(historico_umidade)
         co2_chart.line_chart(historico_co2)
 
-        time.sleep(1)
-
-# Executar o aplicativo
-if __name__ == "__main__":
-    main()
+main()

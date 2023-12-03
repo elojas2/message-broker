@@ -16,27 +16,26 @@ def humidity_sensor(simulation_interval):
 
     #loop para envio de acordo com o tempo definido
     while True:
-        try:
-            message = round(random.uniform(40, 60), 2)
-            command = f"PUBLISH {topic} {message}"
-            client.send(command.encode())
+        message = round(random.uniform(40, 60), 2)
+        command = f"PUBLISH {topic} {message}"
+        client.send(command.encode())
 
-            # Aguarde o próximo intervalo de simulação
-            time.sleep(simulation_interval)
+        # Aguarde o próximo intervalo de simulação
+        time.sleep(simulation_interval)
 
-            confirmation = client.recv(1024).decode()
+        confirmation = client.recv(1024).decode()
 
-            if confirmation == "PUBLISH_ACCEPTED":
-                print(f"Message published: {message} \nin Topic: {topic}")
-            else:
-                print(f"message rejected: {message} \nin topic: {topic}")
-        except Exception as e:
-            print(f"Error in humidity_sensor: {e}")
+        if confirmation == "PUBLISH_ACCEPTED":
+            print(f"Message published: {message}\nIn Topic: {topic}")
+        else:
+            print(f"message rejected: {message}\nIn topic: {topic}")
     
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
-        print("Use: python3 sensor2_emu.py <simulation_interval>")
+        print("Use: python3 sensor2_emu.py (value_simulation_interval)")
         sys.exit(1)
 
     interval = int(sys.argv[1])
     humidity_sensor(interval)
+
+main()

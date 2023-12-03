@@ -6,7 +6,7 @@ topics = {}
 #dicionario das inscricoes
 subs = {}
 
-#pega o io
+#pega o ip
 def get_remote_address(client):
     ip = f'{client.getpeername()[0]} : {client.getpeername()[1]}'
     return ip
@@ -48,11 +48,6 @@ def process_command_data(data, client):
                 s.send(f"topic: {topic} message: {message}\n".encode())
         client.send("PUBLISH_ACCEPTED".encode())
         print("received and published")
-    #comando LIST
-    elif command == "LIST":
-        client.send("COMMAND_ACCEPTED".encode())
-        topic_list = "\n".join([f"Topic: {topic}, Subscriber: {', '.join(map(get_remote_address, subs[topic]))}" for topic in subs])
-        client.send(topic_list.encode())
 
     else:
         client.send("Command invalid".encode())

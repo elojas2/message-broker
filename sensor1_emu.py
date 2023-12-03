@@ -26,14 +26,16 @@ def temperature_sensor(simulation_interval):
         confirmation = client.recv(1024).decode()
 
         if confirmation == "PUBLISH_ACCEPTED":
-            print(f"Message published: {message} \n in Topic: {topic}")
+            print(f"Message published: {message}\n in Topic: {topic}")
         else:
             print(f"message rejected: {message} \n in topic: {topic}")
     
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 2:
-        print("Use: python3 sensor1_emu.py <simulation_interval>")
+        print("Use: python3 sensor1_emu.py (value_simulation_interval)")
         sys.exit(1)
 
     interval = int(sys.argv[1])
     temperature_sensor(interval)
+
+main()
