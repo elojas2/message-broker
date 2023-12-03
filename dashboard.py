@@ -24,7 +24,6 @@ def main():
 
     if confirmation == "SUBSCRIBE_ACCEPTED":
         print("Subscribed topic.")
-    
 
     # Criar placeholders iniciais para os valores e criar gráficos iniciais
     temperatura_placeholder = st.empty()
