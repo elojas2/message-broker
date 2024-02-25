@@ -17,15 +17,26 @@ A implementação do Message Broker deve ser feita utilizando-se sockets, permit
 ## Para rodar:
 
 Será necessário um terminal Linux, caso seja Windows, basta instalar o WSL para que seja possível rodar.
-Primeiro passo: (iniciar o broker)
+Primeiro passo: entrar na pasta codigo, basta digitar no terminal ```cd codigo``` 
+
+
+Ao entrar na pasta, basta iniciar o broker, para iniciar, basta digitar:
+
+
     Digite no terminal o ``` python3 broker.py ```
 
 Segundo passo: (substitua o topico por algo que queira, você pode digitar mais de um)
+
+
     Digite no terminal o ``` python3 subscriber.py -t <topic_you_want> <topic_you_want1> ```
 
 Terceiro passo: (escolha um tópico e escreva uma mensagem para ele)
+
+
     Digite no terminal o ``` python3 publisher.py -t <topic_you_want> -m <message_you_want> ```
 
 Quarto passo:
+
+
     Digite no terminal o ``` python3 broker_com.py -c LIST ```
 
