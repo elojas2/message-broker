@@ -6,7 +6,7 @@
 ## Esse projeto consiste em duas partes, esse readme fala somente da primeira parte do projeto. 
 
 
-### Descrição Geral
+## Descrição Geral
 
 
 A atividade prática da disciplina consiste no desenvolvimento de uma versão simplificada de um Message Broker que deve implementar o padrão de mensagens publish/subscribe e que será utilizado na construção e simulação de um ambiente de sensoriamento remoto.
