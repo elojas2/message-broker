@@ -9,16 +9,36 @@ A implementação do Message Broker deve ser feita utilizando-se sockets, permit
 
 ## Para rodar:
 
-Será necessário um terminal Linux, caso seja Windows, basta instalar o WSL para que seja possível rodar.
-Primeiro passo: (iniciar o broker)
+Será necessário um terminal Linux, caso seja Windows, basta instalar o WSL.
+Além disso, será necessário adicionar a biblioteca streamlit do python para a visualização do gráfico.
+
+Para adicionar a biblioteca, digite no terminal o seguinte comando: ´´´pip install streamlit´´´.
+
+
+
+Primeiro passo: Entrar na pasta onde está armazenado os códigos, basta digitar no terminal
+``` cd codigo ```.
+
+Segundo passo, basta iniciar o broker:
+
+
     Digite no terminal o ``` python3 broker.py ```
 
-Segundo passo: (substitua o topico por algo que queira, você pode digitar mais de um)
-    Digite no terminal o ``` python3 subscriber.py -t <topic_you_want> <topic_you_want1> ```
+Terceiro passo: 
 
-Terceiro passo: (escolha um tópico e escreva uma mensagem para ele)
-    Digite no terminal o ``` python3 publisher.py -t <topic_you_want> -m <message_you_want> ```
+
+    Digite no terminal o ``` python3 sensor1_emu.py <um_numero_valor_em_segundos> ```
+
+Terceiro passo: 
+
+
+    Digite no terminal o ``` python3 sensor2_emu.py <um_numero_valor_em_segundos> ```
 
 Quarto passo:
-    Digite no terminal o ``` python3 broker_com.py -c LIST ```
 
+
+    Digite no terminal o ``` python3 sensor3_emu.py <um_numero_valor_em_segundos> ```
+
+Quinto e último passo:
+
+    Digite no terminal o ``` streamlit run dashboard.py ```
